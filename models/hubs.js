@@ -1,4 +1,12 @@
+/**
+ * Central registry for all image assets used throughout the game.
+ * Provides organized access to grouped image paths for characters, enemies, backgrounds, UI, and items.
+ */
 class ImageHub {
+    /**
+ * Image sets for the main player character "Pepe".
+ * @type {{ idle: string[], longIdle: string[], walk: string[], jump: string[], hurt: string[], dead: string[] }}
+ */
     static pepe = {
         idle: [
             `img/2_character_pepe/1_idle/idle/I-1.png`,
@@ -59,6 +67,11 @@ class ImageHub {
             `img/2_character_pepe/5_dead/D-57.png`
         ]
     };
+
+    /**
+ * Image sets for the normal-sized chicken enemy.
+ * @type {{ walk: string[], dead: string[] }}
+ */
     static chickenNormal = {
         walk: [
             `img/3_enemies_chicken/chicken_normal/1_walk/1_w.png`,
@@ -69,6 +82,11 @@ class ImageHub {
             `img/3_enemies_chicken/chicken_normal/2_dead/dead.png`
         ]
     };
+
+    /**
+ * Image sets for the small chicken enemy.
+ * @type {{ walk: string[], dead: string[] }}
+ */
     static chickenSmall = {
         walk: [
             `img/3_enemies_chicken/chicken_small/1_walk/1_w.png`,
@@ -79,6 +97,11 @@ class ImageHub {
             `img/3_enemies_chicken/chicken_small/2_dead/dead.png`
         ]
     };
+
+    /**
+  * Image sets for the boss enemy chicken.
+  * @type {{ walk: string[], alert: string[], attack: string[], hurt: string[], dead: string[] }}
+  */
     static enemieBossChicken = {
         walk: [
             `img/4_enemie_boss_chicken/1_walk/G1.png`,
@@ -117,6 +140,11 @@ class ImageHub {
             `img/4_enemie_boss_chicken/5_dead/G26.png`
         ]
     };
+
+    /**
+   * Background layer and cloud images for parallax scenery.
+   * @type {{ layers: { firstLayer: string[], secondLayer: string[], thirdLayer: string[] }, clouds: string[] }}
+   */
     static background = {
         layers: {
             firstLayer: [
@@ -137,6 +165,11 @@ class ImageHub {
             `img/5_background/layers/4_clouds/2.png`
         ],
     };
+
+    /**
+ * Salsa bottle images for different states (rotation, splash, etc.).
+ * @type {{ splash: string[], rotation: string[], salsaOnGround: string[], salsaBottle: string }}
+ */
     static bottleSplash = {
         splash: [
             `img/6_salsa_bottle/bottle_rotation/bottle_splash/1_bottle_splash.png`,
@@ -158,6 +191,11 @@ class ImageHub {
         ],
         salsaBottle: "img/6_salsa_bottle/salsa_bottle.png"
     };
+
+    /**
+ * Status bar images for coin display.
+ * @type {{ blue: string[], green: string[], orange: string[] }}
+ */
     static statusbarCoin = {
         blue: [
             `img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png`,
@@ -184,6 +222,11 @@ class ImageHub {
             `img/7_statusbars/1_statusbar/1_statusbar_coin/orange/100.png`
         ]
     };
+
+    /**
+ * Status bar images for player health display.
+ * @type {{ blue: string[], green: string[], orange: string[] }}
+ */
     static statusbarHealth = {
         blue: [
             `img/7_statusbars/1_statusbar/2_statusbar_health/blue/0.png`,
@@ -210,6 +253,11 @@ class ImageHub {
             `img/7_statusbars/1_statusbar/2_statusbar_health/orange/100.png`
         ]
     };
+
+    /**
+ * Status bar images for bottle collection display.
+ * @type {{ blue: string[], green: string[], orange: string[] }}
+ */
     static statusbarBottle = {
         blue: [
             `img/7_statusbars/1_statusbar/3_statusbar_bottle/blue/0.png`,
@@ -236,6 +284,11 @@ class ImageHub {
             `img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png`
         ]
     };
+
+    /**
+  * Status bar images for Endboss health display.
+  * @type {{ blue: string[], green: string[], orange: string[] }}
+  */
     static statusbarEndboss = {
         blue: [
             `img/7_statusbars/2_statusbar_endboss/blue/blue0.png`,
@@ -262,16 +315,31 @@ class ImageHub {
             `img/7_statusbars/2_statusbar_endboss/orange/orange100.png`
         ]
     };
+
+    /**
+    * Icon images for status bars (e.g., coin, health, salsa bottle).
+    * @type {{ coin: string, healthEndboss: string, health: string, salsaBottle: string }}
+    */
     static icons = {
         coin: `img/7_statusbars/3_icons/icon_coin.png`,
         healthEndboss: `img/7_statusbars/3_icons/icon_health_endboss.png`,
         health: `img/7_statusbars/3_icons/icon_health.png`,
         salsaBottle: `img/7_statusbars/3_icons/icon_salsa_bottle.png`
     };
+
+    /**
+ * Rotating coin animation frames.
+ * @type {string[]}
+ */
     static coin = [
         `img/8_coin/coin_1.png`,
         `img/8_coin/coin_2.png`
     ];
+
+    /**
+ * Intro and outro screen images (start & game over screens).
+ * @type {{ gameOver: string[], start: string[] }}
+ */
     static introOutroScreens = {
         gameOver: [
             `img/9_intro_outro_screens/game_over/example.png`,
@@ -287,20 +355,45 @@ class ImageHub {
     };
 }
 
+/**
+ * Utility hub for managing all running intervals in the game.
+ * Ensures proper cleanup to avoid performance issues.
+ */
 class IntervalHub {
+    /**
+ * List of all active interval IDs.
+ * @type {number[]}
+ */
     static allIntervals = [];
 
+    /**
+   * Starts a new interval and stores its ID for centralized control.
+   * @param {Function} func - Function to execute periodically.
+   * @param {number} timer - Interval duration in milliseconds.
+   */
     static startInterval(func, timer) {
         const newInterval = setInterval(func, timer);
         IntervalHub.allIntervals.push(newInterval);
     }
+    /**
+     * Stops and clears all active intervals managed by this hub.
+     * @returns {void}
+     */
     static stopAllIntervals() {
         IntervalHub.allIntervals.forEach(clearInterval);
         IntervalHub.allIntervals = [];
     }
 }
 
+/**
+ * Central audio manager for all sound effects and background music.
+ * Handles playing, looping, muting, and saving user sound settings.
+ */
 class SoundHub {
+    /**
+ * All sound objects used in the game.
+ * @type {Record<string, HTMLAudioElement>}
+ */
     static sounds = {
         background: new Audio("audio/background-music.mp3"),
         footstep: new Audio("audio/footstep.mp3"),
@@ -317,8 +410,16 @@ class SoundHub {
         snoring: new Audio("audio/characterSnoring.mp3"),
     };
 
+    /**
+ * Indicates whether all sounds are currently muted.
+ * @type {boolean}
+ */
     static muted = false;
 
+    /**
+     * Initializes audio settings, loops, and volume levels.
+     * @returns {void}
+     */
     static init() {
         this.sounds.background.loop = true;
         this.sounds.background.volume = 0.04;
@@ -338,6 +439,12 @@ class SoundHub {
         this.sounds.snoring.volume = 0.1;
         this.loadSoundSetting();
     }
+
+
+    /**
+     * Loads saved mute setting from local storage and updates the sound icon.
+     * @returns {void}
+     */
     static loadSoundSetting() {
         const savedMuted = localStorage.getItem("soundMuted");
         if (savedMuted !== null) {
@@ -345,11 +452,19 @@ class SoundHub {
         }
         this.updateIcon();
     }
+
+    /**
+     * Saves the current mute state to local storage.
+     * @returns {void}
+     */
     static saveSoundSetting() {
         localStorage.setItem("soundMuted", this.muted);
     }
 
-
+    /**
+      * Plays a specific sound by name, restarting it if already loaded.
+      * @param {string} name - Sound key name from the {@link sounds} map.
+      */
     static play(name) {
         if (!this.muted && this.sounds[name]) {
             let sound = this.sounds[name];
@@ -358,6 +473,10 @@ class SoundHub {
         }
     }
 
+    /**
+ * Starts looping a sound (useful for footsteps or background).
+ * @param {string} name - Sound key name.
+ */
     static startLoop(name) {
         if (!this.muted && this.sounds[name]) {
             let sound = this.sounds[name];
@@ -367,12 +486,20 @@ class SoundHub {
         }
     }
 
+    /**
+  * Stops a looping sound and resets its time.
+  * @param {string} name - Sound key name.
+  */
     static stopLoop(name) {
         if (this.sounds[name]) {
             this.sounds[name].pause();
             this.sounds[name].currentTime = 0;
         }
     }
+
+    /**
+  * Toggles mute state globally and updates sound icons/UI.
+  */
     static toggleMute() {
         this.muted = !this.muted;
 
@@ -386,6 +513,11 @@ class SoundHub {
         this.updateIcon();
         this.saveSoundSetting();
     }
+
+    /**
+ * Updates the sound toggle icon depending on the mute state.
+ * @private
+ */
     static updateIcon() {
         const btn = document.getElementById("toggle-sound");
         if (btn) {
