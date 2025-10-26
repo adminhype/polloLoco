@@ -1,7 +1,4 @@
-//#region Coin
 class Coin extends MovableObject {
-    //#endregion
-    //#region Coin Attribute
     y = 180;
     width = 100;
     height = 100;
@@ -14,9 +11,6 @@ class Coin extends MovableObject {
     };
 
     IMAGES = ImageHub.coin;
-    //#endregion
-
-    //#region Constructor
     constructor() {
         super();
         this.loadImage(this.IMAGES[0]);
@@ -33,6 +27,4 @@ class Coin extends MovableObject {
         }
         this.frameCounter++;
     }
-    //#endregion
 }
-//#endregion

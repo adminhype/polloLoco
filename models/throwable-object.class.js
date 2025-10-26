@@ -1,6 +1,4 @@
-//#region Throw-Bottle
 class ThrowableObject extends MovableObject {
-    //#region Load-Bottle and Startposition
     constructor(x, y) {
         super().loadImage(ImageHub.bottleSplash.rotation[0]);
         this.x = x;
@@ -21,7 +19,8 @@ class ThrowableObject extends MovableObject {
         this.markedForDeletion = false;
 
     }
-    //#endregion
+
+    //#region movement and physics
     update() {
         if (this.isBroken) return;
         this.x += this.speedX;
@@ -31,7 +30,9 @@ class ThrowableObject extends MovableObject {
             this.breakBottle();
         }
     }
+    //#endregion
 
+    //#region animation
     animate() {
         if (!this.isBroken) {
             if (this.frameCounter % 4 === 0) {
@@ -45,7 +46,9 @@ class ThrowableObject extends MovableObject {
         }
         this.frameCounter++;
     }
+    //#endregion
 
+    //#region state handling
     breakBottle() {
         this.isBroken = true;
         this.speedY = 0;
@@ -56,5 +59,5 @@ class ThrowableObject extends MovableObject {
             this.markedForDeletion = true;
         }, 1000);
     }
+    //#endregion
 }
-//#endregion

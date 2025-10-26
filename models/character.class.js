@@ -1,6 +1,5 @@
-//#region Character
 class Character extends MovableObject {
-    //#region Attribut Pepe
+    //#region attributes
     speed = 10;
     y = 120;
     height = 250;
@@ -24,7 +23,6 @@ class Character extends MovableObject {
     world;
     //#endregion
 
-    //#region constructor
     constructor() {
         super().loadImage('img/2_character_pepe/2_walk/W-21.png');
         this.lastAction = this.getNow();
@@ -32,18 +30,15 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_JUMP);
         this.loadImages(this.IMAGES_DEAD);
-        this.loadImages(this.IMAGES_HURT); // load images with array
+        this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_SLEEP);
 
         this.animationSpeed = 8;
         this.animationCounter = 0;
     }
-    //#endregion
-    getNow() {
-        return new Date().getTime();
-    }
 
-    //#region pepe animation
+    //#region movement
+
     jump() {
         this.speedY = 25;
         SoundHub.play("jump");
@@ -74,6 +69,9 @@ class Character extends MovableObject {
         if (moved) this.lastAction = this.getNow();
         this.world.camera_x = -this.x + 100;
     }
+    //#endregion
+
+    //#region animation
     characterAnimation() {
         this.animationCounter++;
         if (this.isDead()) {
@@ -101,7 +99,12 @@ class Character extends MovableObject {
             this.lastJumpFrameTime = now;
         }
     }
+    //#endregion
 
+    //#region helpers
+    getNow() {
+        return new Date().getTime();
+    }
     isSleeping() {
         let idleTime = (this.getNow() - this.lastAction) / 1000;
         let sleeping = idleTime > this.SLEEP_DELAY;
@@ -118,4 +121,3 @@ class Character extends MovableObject {
     }
     //#endregion
 }
-//#endregion

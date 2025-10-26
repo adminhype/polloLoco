@@ -1,11 +1,11 @@
-//#region Initialize global game variables
+//#region global variables
 let canvas;
 let world;
 let keyboard = new Keyboard();
 const worlds = [];
 //#endregion
 
-//#region Get and store DOM elements (canvas).
+//#region game initialization
 function init() {
     SoundHub.init();
     canvas = document.getElementById('canvas');
@@ -31,6 +31,9 @@ function resetGameState() {
         worlds.splice(0, 1, new World(canvas, keyboard));
     }
 }
+//#endregion
+
+//#region screen management
 function makeScreenInvisible(screenID, buttonGroupID) {
     const screenRef = document.getElementById(screenID);
     const buttonGroupRef = document.getElementById(buttonGroupID);
@@ -57,11 +60,14 @@ function showStartScreen(screenID, buttonGroupID) {
     if (infoBtn) infoBtn.style.display = 'flex';
 }
 //#endregion
+
+//#region ui and overlay controls
 document.addEventListener('DOMContentLoaded', () => {
     const overlay = document.getElementById('info-overlay');
     const openBtn = document.getElementById('info-btn');
     const closeBtn = document.getElementById('close-overlay');
 
+    //overlay open/close
     openBtn.addEventListener('click', (e) => {
         e.preventDefault();
         overlay.classList.remove('d-none');
@@ -81,6 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnThrow = document.getElementById('btn-throw');
     const mobileControls = document.getElementById('mobile-controls');
 
+    // mobile touch controls
+
     if (btnLeft && btnRight && btnUp && btnThrow && mobileControls) {
         btnLeft.addEventListener('touchstart', () => keyboard.LEFT = true, { passive: false });
         btnLeft.addEventListener('touchend', () => keyboard.LEFT = false, { passive: false });
@@ -93,9 +101,10 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileControls.addEventListener('contextmenu', (e) => e.preventDefault());
     }
 });
-//#region Register keyboard events for gameplay.
-document.addEventListener('keydown', (e) => {
+//#endregion
 
+//#region keyboard controls
+document.addEventListener('keydown', (e) => {
     if (e.keyCode == 39) { // 39 is key →
         keyboard.RIGHT = true;
     }

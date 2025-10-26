@@ -1,25 +1,19 @@
-//#region statusbar
 class BottleBar extends DrawableObject {
-    //#region attribute
     IMAGES = ImageHub.statusbarBottle.blue;
     percentage = 0;
-    x = 40; // coordinates
+    x = 40;
     y = 40;
     width = 200;
     height = 60;
-    //#endregion
 
-    //#region constructor
     constructor() {
-        super(); // initialize superclass 
+        super();
         this.loadImages(this.IMAGES);
         this.setPercentage(0);
     }
-    //#endregion
 
-    //#region method percent-logic and img selection
-    setPercentage(percentage) { // use func outside with setPercenatage(50);
-        this.percentage = percentage; // > between 0 and 5
+    setPercentage(percentage) {
+        this.percentage = percentage;
         let path = this.IMAGES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
@@ -38,8 +32,5 @@ class BottleBar extends DrawableObject {
             return 0;
         }
     }
-    //#endregion
-
 }
-//#endregion
 

@@ -1,6 +1,4 @@
-//#region Draw_Object
 class DrawableObject {
-    //#region Static Attributes
     img;
     currentImage = 0;
     imageCache = {};
@@ -8,18 +6,14 @@ class DrawableObject {
     y = 280;
     height = 150;
     width = 100;
-    //#endregion
 
-    //#region Images
-    //loadImage('img/test.png')
     loadImage(path) {
-        this.img = new Image(); // this.img = document.getElementById('image') <img id="image" src>
+        this.img = new Image();
         this.img.src = path;
     }
 
     draw(ctx) {
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-        // this.drawFrame(ctx); // draw frame for collision
     }
     /**
   * 
@@ -32,6 +26,4 @@ class DrawableObject {
             this.imageCache[path] = img;
         });
     }
-    //#endregion
 }
-//#endregion

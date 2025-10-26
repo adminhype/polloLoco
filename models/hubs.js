@@ -1,4 +1,3 @@
-//#region Images
 class ImageHub {
     static pepe = {
         idle: [
@@ -287,9 +286,7 @@ class ImageHub {
         ]
     };
 }
-//#endregion
 
-//#region Interval
 class IntervalHub {
     static allIntervals = [];
 
@@ -302,9 +299,7 @@ class IntervalHub {
         IntervalHub.allIntervals = [];
     }
 }
-//#endregion
 
-//#region Sounds
 class SoundHub {
     static sounds = {
         background: new Audio("audio/background-music.mp3"),
@@ -400,4 +395,3 @@ class SoundHub {
         }
     }
 }
-//#endregion

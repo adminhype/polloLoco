@@ -1,6 +1,6 @@
-//#region Movable-Objects
 class MovableObject extends DrawableObject {
-    //#region Movable-Object Attributes
+
+    //#region attributes
     speed = 0.2;
     otherDirection = false;
     speedY = 0;
@@ -14,26 +14,23 @@ class MovableObject extends DrawableObject {
         left: 0,
         right: 0
     };
-    rX; // x coodinate hitbox
-    rY; // y coordinate hitbox
-    rW; // width hitbox
-    rH; // height hitbox
+    rX;
+    rY;
+    rW;
+    rH;
     //#endregion
 
-    //#region  Constructor
     constructor() {
         super();
     }
-    //#endregion
 
-    //#region Methods
+    //#region collision detection
     getRealFrame() {
         this.rX = this.x + this.offset.left;
         this.rY = this.y + this.offset.top;
         this.rW = this.width - this.offset.left - this.offset.right;
         this.rH = this.height - this.offset.top - this.offset.bottom;
     }
-    //character.isCollding(chicken);
     isColliding(moObject) {
         this.getRealFrame();
         moObject.getRealFrame();
@@ -42,6 +39,9 @@ class MovableObject extends DrawableObject {
             this.rX < moObject.rX + moObject.rW &&
             this.rY < moObject.rY + moObject.rH;
     }
+    //#endregion
+
+    //#region movement and physics
     applyGravity() {
         if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
@@ -54,31 +54,11 @@ class MovableObject extends DrawableObject {
     }
 
     isAboveGround() {
-        if (this instanceof ThrowableObject) { // throwable object should alwys fall 
+        if (this instanceof ThrowableObject) {
             return true;
         } else {
             return this.y < 180;
         }
-    }
-    hit() { // refector hit > energy > not under zero
-        this.energy -= 20;
-        if (this.energy < 0) {
-            this.energy = 0;
-        } else {
-            this.lastHit = new Date().getTime(); // save time in numbers
-            SoundHub.play("hurt");
-        }
-        if (this.energy <= 0) {
-            SoundHub.play("death");
-        }
-    }
-    isHurt() {
-        let timepassed = new Date().getTime() - this.lastHit // diff in ms
-        timepassed = timepassed / 1000; // diff in sec
-        return timepassed < 0.5; // hit under x sec
-    }
-    isDead() {
-        return this.energy <= 0 || this.dead === true;
     }
     moveRight() {
         this.x += this.speed;
@@ -89,6 +69,32 @@ class MovableObject extends DrawableObject {
     jump() {
         this.speedY = 18;
     }
+    //#endregion
+
+    //#region status and damage handling
+    hit() {
+        this.energy -= 20;
+        if (this.energy < 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime();
+            SoundHub.play("hurt");
+        }
+        if (this.energy <= 0) {
+            SoundHub.play("death");
+        }
+    }
+    isHurt() {
+        let timepassed = new Date().getTime() - this.lastHit
+        timepassed = timepassed / 1000;
+        return timepassed < 0.5;
+    }
+    isDead() {
+        return this.energy <= 0 || this.dead === true;
+    }
+    //#endregion
+
+    //#region animation
     playAnimation(images) {
         let i = this.currentImage % images.length;
         let path = images[i];
@@ -97,4 +103,3 @@ class MovableObject extends DrawableObject {
     }
     //#endregion
 }
-//#endregion

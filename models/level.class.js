@@ -1,6 +1,4 @@
-//#region level 1
 class Level {
-
     //#region attribute
     // enemies;
     // clouds;
@@ -9,8 +7,9 @@ class Level {
     // coins;
     level_end_x = 3200;
     //#endregion
-    //#region Objects
-    enemies = [ // Gegner
+
+    //#region object collections
+    enemies = [
         new Chicken(),
         new Chicken(),
         new Chicken(),
@@ -34,6 +33,7 @@ class Level {
     backgroundObjects = [];
     salsaBottles = [];
     coins = [];
+    //#endregion
 
     constructor(bottleCount = 10, coinCount = 5) {
         for (let i = 0; i < bottleCount; i++) {
@@ -52,6 +52,4 @@ class Level {
             this.backgroundObjects.push(new BackgroundObject(`img/5_background/layers/1_first_layer/${type}`, 719 * i));
         }
     }
-    //#endregion
 }
-//#endregion

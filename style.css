@@ -1,3 +1,4 @@
+/* #region globale settings */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -9,14 +10,15 @@
   font-family: "eater";
   src: url("./fonts/eater.ttf");
 }
+/* #endregion */
 
+/* #region basic layout */
 html, body {
   width: 100%;
   height: 100%;
   min-height: 100vh;
   overflow: hidden;
 }
-
 body {
   display: flex;
   flex-direction: column;
@@ -44,8 +46,9 @@ canvas {
   height: auto;
   max-height: 80vh;
 }
+/* #endregion */
 
-/* SCREENS (Start, Win, Game Over) */
+/* #region screen(start, win, game over) */
 .screen {
   position: absolute;
   inset: 0;
@@ -70,8 +73,9 @@ canvas {
 
 .screen-img.cover { object-fit: cover; }
 .screen-img.contain { object-fit: contain; background-color: #0D0D12CC; }
+/* #endregion */
 
-/* Buttons unterhalb des Canvas */
+/* #region buttons & controls  */
 .controls {
   position: absolute;
   top: 90%;
@@ -105,8 +109,10 @@ button:hover {
   color: #C47A37;
   transform: scale(1.05);
 }
+/* #endregion */
 
-/* SOUND BUTTON */
+
+/* #region sound button  */
 #sound-control {
   position: absolute;
   top: 20px;
@@ -123,8 +129,9 @@ button:hover {
 #toggle-sound:hover {
   transform: scale(1.1);
 }
+/* #endregion */
 
-/* CONTROL HUB (Desktop Help + Game Rules kombiniert) */
+/* #region control-hub (desktop and rules ) */
 .control-hub {
   margin-top: 1rem;
   background: #793D26;
@@ -187,7 +194,9 @@ button:hover {
   font-size: 1.1rem;
   margin-left: 0.5rem;
 }
+/* #endregion */
 
+/* #region legal-notice button  */
 #info-btn {
   position: absolute;
   bottom: 10px;
@@ -201,8 +210,9 @@ button:hover {
   color: #C47A37;
   transform: scale(1.05);
 }
+/* #endregion */
 
-/* OVERLAY (Impressum) */
+/* #region overlay(legal notice) */
 .overlay {
   position: fixed;
   inset: 0;
@@ -272,17 +282,15 @@ button:hover {
   color: #C47A37;
   transform: scale(1.15);
 }
+/* #endregion */
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.mobile-controls button:active {
-  transform: scale(0.9);
-}
-
-/* ROTATE WARNING  */
+/* #region rotate warning  */
 .rotate-warning {
   display: none;
   position: fixed;
@@ -296,17 +304,16 @@ button:hover {
   text-align: center;
   padding: 2rem;
 }
+/* #endregion */
 
-/* RESPONSIVE DESIGN */
-
-/* Kleinere Bildschirme und Touch-Geräte */
+/* #region responsive */
+/* small screens */
 @media (max-width: 1200px) and (orientation: landscape) {
   canvas {
     max-height: 70vh;
   }
 }
-
-/* Portrait → nur Rotate-Warning für alle Touch-Geräte */
+/* warning  */
 @media (pointer: coarse) and (orientation: portrait) {
   .game-container,
   .mobile-controls,
@@ -322,7 +329,7 @@ button:hover {
   }
 }
 
-/* Landscape für Touch-Geräte → Fullscreen Game */
+/* landscape touch */
 @media (pointer: coarse) and (orientation: landscape) {
   html, body {
     margin: 0;
@@ -407,8 +414,10 @@ button:hover {
     pointer-events: none;
   }
 }
-
-/* Spezielle Regel für größere Tablets im Querformat */
+.mobile-controls button:active {
+  transform: scale(0.9);
+}
+/* tablet*/
 @media (pointer: coarse) and (orientation: landscape) and (min-width: 768px) and (max-width: 1366px) {
   canvas {
     max-width: calc(100vh * 1.5); /* Canvas 3:2 Aspect Ratio beibehalten */
@@ -418,9 +427,7 @@ button:hover {
   }
 }
 
-/* DESKTOP GERÄTE */
-
-/* Desktop ab 1025px → normal spielbar */
+/* desktop */
 @media (pointer: fine) and (min-width: 1025px) {
   .mobile-controls,
   .rotate-warning {
@@ -431,7 +438,7 @@ button:hover {
   }
 }
 
-/* Desktop bis 1024px → Rotate-Warning */
+/* desktop small screens  */
 @media (pointer: fine) and (max-width: 1024px) {
   .game-container,
   .mobile-controls,
@@ -445,3 +452,4 @@ button:hover {
     display: flex;
   }
 }
+/* #endregion */

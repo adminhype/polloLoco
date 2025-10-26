@@ -1,4 +1,3 @@
-//#region Define background entity (image, position)
 class BackgroundObject extends MovableObject {
     width = 720;
     height = 480;
@@ -9,4 +8,3 @@ class BackgroundObject extends MovableObject {
         this.y = 480 - this.height;
     }
 }
-//#endregion

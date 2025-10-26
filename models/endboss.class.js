@@ -1,4 +1,3 @@
-//#region Boss-Enemy
 class Endboss extends MovableObject {
     //#region attributes
     height = 400;
@@ -19,7 +18,6 @@ class Endboss extends MovableObject {
     IMAGES_DEAD = ImageHub.enemieBossChicken.dead;
     //#endregion
 
-    //#region constructor
     constructor() {
         super().loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_WALK);
@@ -37,8 +35,7 @@ class Endboss extends MovableObject {
         this.hurtDuration = 500;
 
     }
-    //#endregion
-    //#region Endboss-Animation
+    //#region movement and animation
     moveStep = (character) => {
         if (!this.isDead() && this.isAlert(character)) {
             if (this.x > character.x) {
@@ -76,6 +73,9 @@ class Endboss extends MovableObject {
             this.playAnimation(images);
         }
     }
+    //#endregion
+
+    //#region status checks
     isCloseTo(character) {
         return Math.abs(this.x - character.x) < 300;
     }
@@ -83,7 +83,9 @@ class Endboss extends MovableObject {
     isAlert(character) {
         return Math.abs(this.x - character.x) < 500;
     }
+    //#endregion
 
+    //#region state and damage handling
     die = () => {
         this.energy = 0;
         this.speed = 0;
@@ -104,4 +106,3 @@ class Endboss extends MovableObject {
     }
     //#endregion
 }
-//#endregion

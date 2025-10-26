@@ -1,6 +1,6 @@
-//#region Small Cicken
 class ChickenSmall extends MovableObject {
-    //#region Attribute Small-Chicken
+
+    //#region attributes
     y = 370;
     height = 50;
     width = 50;
@@ -14,10 +14,8 @@ class ChickenSmall extends MovableObject {
 
     IMAGES_WALK = ImageHub.chickenSmall.walk;
     IMAGES_DEAD = ImageHub.chickenSmall.dead;
-
     //#endregion
 
-    //#region constructor 
     constructor() {
         super().loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_WALK);
@@ -28,8 +26,7 @@ class ChickenSmall extends MovableObject {
         this.animationSpeed = 10;
         this.dead = false;
     }
-    //#endregion
-
+    //#region movement and animation
     moveStep = () => {
         if (!this.isDead()) {
             this.x -= this.speed;
@@ -49,7 +46,9 @@ class ChickenSmall extends MovableObject {
             }
         }
     }
+    //#endregion
 
+    //#region state handling
     die = () => {
         if (!this.dead) {
             this.dead = true;
@@ -58,4 +57,5 @@ class ChickenSmall extends MovableObject {
             SoundHub.play("chickenDead");
         }
     }
+    //#endregion
 }

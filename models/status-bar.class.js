@@ -1,25 +1,19 @@
-//#region Statusbar
 class StatusBar extends DrawableObject {
-    //#region attribute
     IMAGES = ImageHub.statusbarHealth.green;
     percentage = 100;
-    //#endregion
 
-    //#region Constructor
     constructor() {
-        super(); // initialize superclass 
+        super();
         this.loadImages(this.IMAGES);
-        this.x = 40; // coordinates
+        this.x = 40;
         this.y = 0;
         this.width = 200;
         this.height = 60;
-        this.setPercentage(100); // 10=% img > path
+        this.setPercentage(100);
     }
-    //#endregion
 
-    //#region Percent-Logic and Img-Section
-    setPercentage(percentage) { // use func outside with setPercenatage(50);
-        this.percentage = percentage; // > between 0 and 5
+    setPercentage(percentage) {
+        this.percentage = percentage;
         let path = this.IMAGES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
@@ -38,7 +32,4 @@ class StatusBar extends DrawableObject {
             return 0;
         }
     }
-    //#endregion
 }
-//#endregion
-

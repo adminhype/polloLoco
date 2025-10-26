@@ -1,6 +1,6 @@
-//#region Map
 class World {
-    //#region Attribute: Character, Level and Ui_Elements
+
+    //#region attributes
     character = new Character();
     level = new Level();
     ctx;
@@ -18,7 +18,6 @@ class World {
     collectedCoins = [];
     //#endregion
 
-    //#region Create Canvas, Keyboard, initialization
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
@@ -26,12 +25,14 @@ class World {
         this.setWorld();
         this.draw();
     }
-    //#endregion
 
-    //#region Game-Logic (run, collisions, throw, ....)
+    //#region setup
     setWorld() {
         this.character.world = this;
     }
+    //#endregion
+
+    //#region input and throwing logic
     checkThrowObjects() {
         if (this.character.isSleeping()) return;
         let now = new Date().getTime();
@@ -48,7 +49,7 @@ class World {
             let bottle = new ThrowableObject(
                 this.character.x + offsetX,
                 this.character.y + offsetY,
-                1 // only right throw
+                1
             );
 
             this.throwableObjects.push(bottle);
@@ -56,6 +57,9 @@ class World {
             this.lastThrowTime = now;
         }
     }
+    //#endregion
+
+    //#region collision detection
     checkCollisions() {
         this.checkEnemyCollisions();
         this.checkBottleCollisions();
@@ -126,7 +130,9 @@ class World {
             });
         });
     }
+    //#endregion
 
+    //#region game state handling
     gameOver() {
         this.isRunning = false;
         SoundHub.stopLoop("footstep");
@@ -152,12 +158,12 @@ class World {
     }
     //#endregion
 
-    //#region Render: World and Objects 
+    //#region rendering
     draw() {
         if (!this.isRunning) return;
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.save();
-        this.ctx.translate(this.camera_x, 0); // move char with camera
+        this.ctx.translate(this.camera_x, 0);
         this.addObjectsToMap(this.level.backgroundObjects);
         this.addObjectsToMap(this.level.clouds);
         this.addObjectsToMap(this.throwableObjects);
@@ -166,7 +172,6 @@ class World {
         this.addObjectsToMap(this.level.enemies);
         this.addToMap(this.character);
         this.ctx.restore();
-        // fix statusbar moving with char 
 
         // this.ctx.translate(-this.camera_x, 0); // back
         this.addToMap(this.statusBar);
@@ -181,6 +186,8 @@ class World {
         });
     }
     //#endregion
+
+    //#region game logic update
     update() {
         this.checkCollisions();
         this.checkThrowObjects();
@@ -203,7 +210,9 @@ class World {
             this.winGame();
         }
     }
-    //#region Draw multiply Objects on Canvas
+    //#endregion
+
+    //#region rendering helpers
     addObjectsToMap(objects) {
         objects.forEach(obj => {
             if (obj instanceof ThrowableObject) {
@@ -216,15 +225,12 @@ class World {
             this.addToMap(obj);
         })
     }
-    //#endregion
 
-    //#region Draw Object and Image Reverse
     addToMap(moObject) {
         if (moObject.otherDirection) {
             this.flipImage(moObject);
         }
         moObject.draw(this.ctx);
-        // moObject.drawFrame(this.ctx);
 
         if (moObject.otherDirection) {
             this.flipImageBack(moObject);
@@ -244,4 +250,3 @@ class World {
     }
     //#endregion
 }
-//#endregion

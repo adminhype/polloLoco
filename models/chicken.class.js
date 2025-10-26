@@ -1,6 +1,6 @@
-//#region Chicken
 class Chicken extends MovableObject {
-    //#region Attribute Chicken
+
+    //#region attributes
     y = 350;
     height = 70;
     width = 70;
@@ -17,7 +17,6 @@ class Chicken extends MovableObject {
 
     //#endregion
 
-    //#region Constructor
     constructor() {
         super().loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_WALK);
@@ -30,8 +29,8 @@ class Chicken extends MovableObject {
 
         this.dead = false;
     }
-    //#endregion
 
+    //#region movement and animation
     moveStep = () => {
         if (!this.isDead()) {
             this.x -= this.speed;
@@ -51,7 +50,9 @@ class Chicken extends MovableObject {
             }
         }
     }
+    //#endregion
 
+    //#region state handling
     die = () => {
         this.dead = true;
         this.energy = 0;
@@ -59,4 +60,5 @@ class Chicken extends MovableObject {
         this.animationCounter = 0;
         SoundHub.play("chickenDead");
     }
+    //#endregion
 }
