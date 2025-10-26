@@ -15,12 +15,12 @@ class StatusBarEndboss extends StatusBar {
         let percentage = (energy / this.maxValue) * 100;
         this.setPercentage(percentage);
     }
+
     resolveImageIndex() {
-        if (this.percentage > 80) return 5;
-        else if (this.percentage > 60) return 4;
-        else if (this.percentage > 40) return 3;
-        else if (this.percentage > 20) return 2;
-        else if (this.percentage > 0) return 1;
-        else return 0;
+        const thresholds = [80, 60, 40, 20, 0];
+        for (let i = 0; i < thresholds.length; i++) {
+            if (this.percentage > thresholds[i]) return 5 - i;
+        }
+        return 0;
     }
 }

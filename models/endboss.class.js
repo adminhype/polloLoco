@@ -20,11 +20,8 @@ class Endboss extends MovableObject {
 
     constructor() {
         super().loadImage(this.IMAGES_WALK[0]);
-        this.loadImages(this.IMAGES_WALK);
-        this.loadImages(this.IMAGES_ALERT);
-        this.loadImages(this.IMAGES_ATTACK);
-        this.loadImages(this.IMAGES_HURT);
-        this.loadImages(this.IMAGES_DEAD);
+        [this.IMAGES_WALK, this.IMAGES_ALERT, this.IMAGES_ATTACK,
+        this.IMAGES_HURT, this.IMAGES_DEAD].forEach(imgs => this.loadImages(imgs));
         this.x = 3000;
         this.animationCounter = 0;
         this.animationSpeed = 15;
@@ -37,36 +34,24 @@ class Endboss extends MovableObject {
     }
     //#region movement and animation
     moveStep = (character) => {
-        if (!this.isDead() && this.isAlert(character)) {
-            if (this.x > character.x) {
-                this.x -= this.speed;
-            } else {
-                this.x += this.speed;
-            }
-        }
+        if (this.isDead() || !this.isAlert(character)) return;
+        this.x += this.x > character.x ? -this.speed : this.speed;
     }
     animateStep = (character) => {
         this.animationCounter++;
-        if (this.isDead()) {
-            this.playWithDelay(this.IMAGES_DEAD);
-            setTimeout(() => {
-                this.markedForDeletion = true;
-            }, 2000);
-        }
-        else if (this.isCurrentlyHurt) {
-            this.playWithDelay(this.IMAGES_HURT);
-        }
-        else if (this.isCloseTo(character)) {
-            this.playWithDelay(this.IMAGES_ATTACK);
-        }
-        else if (this.isAlert(character)) {
-            if (this.x !== character.x) {
-                this.playWithDelay(this.IMAGES_WALK);
-            }
-        }
-        else {
-            this.playWithDelay(this.IMAGES_ALERT);
-        }
+        if (this.isDead())
+            return this.handleDeath();
+        if (this.isCurrentlyHurt)
+            return this.playWithDelay(this.IMAGES_HURT);
+        if (this.isCloseTo(character))
+            return this.playWithDelay(this.IMAGES_ATTACK);
+        if (this.isAlert(character) && this.x !== character.x)
+            return this.playWithDelay(this.IMAGES_WALK);
+        this.playWithDelay(this.IMAGES_ALERT);
+    }
+    handleDeath() {
+        this.playWithDelay(this.IMAGES_DEAD);
+        setTimeout(() => this.markedForDeletion = true, 2000);
     }
     playWithDelay(images) {
         if (this.animationCounter % this.animationSpeed === 0) {
@@ -95,11 +80,9 @@ class Endboss extends MovableObject {
         this.energy = Math.max(0, this.energy - damage);
         this.isCurrentlyHurt = true;
         SoundHub.play("chickenDead2");
-
         setTimeout(() => {
             this.isCurrentlyHurt = false;
         }, this.hurtDuration);
-
         if (this.energy <= 0) {
             this.die();
         }

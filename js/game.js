@@ -46,106 +46,86 @@ function makeScreenInvisible(screenID, buttonGroupID) {
 
 function showStartScreen(screenID, buttonGroupID) {
     makeScreenInvisible(screenID, buttonGroupID);
+    showScreen("start");
+    showScreen("start-buttons");
 
-    document.getElementById("start").classList.remove("d-none");
-    document.getElementById("start").classList.add("d-flex");
-
-    document.getElementById("start-buttons").classList.remove("d-none");
-    document.getElementById("start-buttons").classList.add("d-flex");
     const mobileControls = document.getElementById('mobile-controls');
-    if (mobileControls) {
-        mobileControls.classList.remove('active');
-    }
-    const infoBtn = document.getElementById('info-btn');
-    if (infoBtn) infoBtn.style.display = 'flex';
+    if (mobileControls) mobileControls.classList.remove('active');
+
+    const infoButton = document.getElementById('info-btn');
+    if (infoButton) infoButton.style.display = 'flex';
+}
+
+function showScreen(elementID) {
+    const element = document.getElementById(elementID);
+    if (!element) return;
+    element.classList.remove("d-none");
+    element.classList.add("d-flex");
 }
 //#endregion
 
 //#region ui and overlay controls
 document.addEventListener('DOMContentLoaded', () => {
-    const overlay = document.getElementById('info-overlay');
-    const openBtn = document.getElementById('info-btn');
-    const closeBtn = document.getElementById('close-overlay');
+    initOverlayControls();
+    initMobileControls();
+});
 
-    //overlay open/close
-    openBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+function initOverlayControls() {
+    const overlay = document.getElementById('info-overlay');
+    const openButton = document.getElementById('info-btn');
+    const closeButton = document.getElementById('close-overlay');
+
+    openButton.addEventListener('click', (event) => {
+        event.preventDefault();
         overlay.classList.remove('d-none');
     });
-
-    closeBtn.addEventListener('click', () => {
-        overlay.classList.add('d-none');
+    closeButton.addEventListener('click', () => overlay.classList.add('d-none'));
+    overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) overlay.classList.add('d-none');
     });
+}
 
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) overlay.classList.add('d-none');
-    });
-
-    const btnLeft = document.getElementById('btn-left');
-    const btnRight = document.getElementById('btn-right');
-    const btnUp = document.getElementById('btn-up');
-    const btnThrow = document.getElementById('btn-throw');
+function initMobileControls() {
+    const buttonLeft = document.getElementById('btn-left');
+    const buttonRight = document.getElementById('btn-right');
+    const buttonUp = document.getElementById('btn-up');
+    const buttonThrow = document.getElementById('btn-throw');
     const mobileControls = document.getElementById('mobile-controls');
 
-    // mobile touch controls
+    const allControlsExist = buttonLeft && buttonRight && buttonUp && buttonThrow && mobileControls;
+    if (!allControlsExist) return;
 
-    if (btnLeft && btnRight && btnUp && btnThrow && mobileControls) {
-        btnLeft.addEventListener('touchstart', () => keyboard.LEFT = true, { passive: false });
-        btnLeft.addEventListener('touchend', () => keyboard.LEFT = false, { passive: false });
-        btnRight.addEventListener('touchstart', () => keyboard.RIGHT = true, { passive: false });
-        btnRight.addEventListener('touchend', () => keyboard.RIGHT = false, { passive: false });
-        btnUp.addEventListener('touchstart', () => keyboard.SPACE = true, { passive: false });
-        btnUp.addEventListener('touchend', () => keyboard.SPACE = false, { passive: false });
-        btnThrow.addEventListener('touchstart', () => keyboard.F = true, { passive: false });
-        btnThrow.addEventListener('touchend', () => keyboard.F = false, { passive: false });
-        mobileControls.addEventListener('contextmenu', (e) => e.preventDefault());
-    }
-});
+    bindTouchControl(buttonLeft, 'LEFT');
+    bindTouchControl(buttonRight, 'RIGHT');
+    bindTouchControl(buttonUp, 'SPACE');
+    bindTouchControl(buttonThrow, 'F');
+    mobileControls.addEventListener('contextmenu', (event) => event.preventDefault());
+}
+
+function bindTouchControl(button, keyName) {
+    button.addEventListener('touchstart', () => keyboard[keyName] = true, { passive: false });
+    button.addEventListener('touchend', () => keyboard[keyName] = false, { passive: false });
+}
 //#endregion
 
 //#region keyboard controls
-document.addEventListener('keydown', (e) => {
-    if (e.keyCode == 39) { // 39 is key →
-        keyboard.RIGHT = true;
-    }
-    if (e.keyCode == 37) { // 37 is key ←
-        keyboard.LEFT = true;
-    }
-    if (e.keyCode == 38) { // 38 is key ↑
-        keyboard.UP = true;
-    }
-    if (e.keyCode == 40) { // 40 is key ↓
-        keyboard.DOWN = true;
-    }
-    if (e.keyCode == 32) { // 32 is key space
-        keyboard.SPACE = true;
-    }
-    if (e.keyCode == 70) { // 70 is key F
-        keyboard.F = true;
-    }
-});
+document.addEventListener('keydown', (event) => handleKeyState(event.keyCode, true));
+document.addEventListener('keyup', (event) => handleKeyState(event.keyCode, false));
 
-document.addEventListener('keyup', (e) => {
-    if (e.keyCode == 39) { // 39 is key →
-        keyboard.RIGHT = false;
-    }
-    if (e.keyCode == 37) { // 37 is key ←
-        keyboard.LEFT = false;
-    }
-    if (e.keyCode == 38) { // 38 is key ↑
-        keyboard.UP = false;
-
-    } if (e.keyCode == 40) { // 40 is key ↓
-        keyboard.DOWN = false;
-
-    } if (e.keyCode == 32) { // 32 is key space
-        keyboard.SPACE = false;
-    }
-    if (e.keyCode == 70) { // 70 is key F
-        keyboard.F = false;
-    }
-});
+function handleKeyState(keyCode, isPressed) {
+    const keyMap = {
+        37: 'LEFT',
+        38: 'UP',
+        39: 'RIGHT',
+        40: 'DOWN',
+        32: 'SPACE',
+        70: 'F'
+    };
+    const key = keyMap[keyCode];
+    if (key) keyboard[key] = isPressed;
+}
 //#endregion
+
 console.log(`
               A           
              AAA          

@@ -35,27 +35,21 @@ class World {
     //#region input and throwing logic
     checkThrowObjects() {
         if (this.character.isSleeping()) return;
-        let now = new Date().getTime();
-        let throwCooldown = 300;
-
-        if (this.keyboard.F &&
-            this.bottlBar.percentage > 0 &&
+        const now = Date.now(), cd = 300;
+        const canThrow = this.keyboard.F && this.bottlBar.percentage > 0 &&
             !this.character.otherDirection &&
-            (!this.lastThrowTime || now - this.lastThrowTime > throwCooldown)) {
+            (!this.lastThrowTime || now - this.lastThrowTime > cd);
+        if (!canThrow) return;
 
-            let offsetX = this.character.width - 20;
-            let offsetY = this.character.height / 2;
-
-            let bottle = new ThrowableObject(
-                this.character.x + offsetX,
-                this.character.y + offsetY,
-                1
-            );
-
-            this.throwableObjects.push(bottle);
-            this.bottlBar.setPercentage(this.bottlBar.percentage - 20);
-            this.lastThrowTime = now;
-        }
+        const offsetX = this.character.width - 20;
+        const offsetY = this.character.height / 2;
+        const bottle = new ThrowableObject(
+            this.character.x + offsetX,
+            this.character.y + offsetY
+        );
+        this.throwableObjects.push(bottle);
+        this.bottlBar.setPercentage(this.bottlBar.percentage - 20);
+        this.lastThrowTime = now;
     }
     //#endregion
 
@@ -68,40 +62,39 @@ class World {
     }
 
     checkEnemyCollisions() {
-        this.level.enemies.forEach((enemy) => {
+        this.level.enemies.forEach(enemy => {
             if (!this.character.isColliding(enemy) || enemy.isDead()) return;
-            if (enemy instanceof Endboss) {
-                if (!this.character.isHurt()) {
-                    this.character.hit();
-                    this.statusBar.setPercentage(this.character.energy);
-                }
-                return;
-            }
-
+            if (enemy instanceof Endboss) return this.handleBossHit();
             const feet = this.character.y + this.character.height;
             const stomp = this.character.speedY < 0 && feet <= enemy.y + enemy.height;
-
-            if (stomp) {
-                enemy.die();
-            } else if (!this.character.isHurt()) {
-                this.character.hit();
-                this.statusBar.setPercentage(this.character.energy);
-            }
+            stomp ? enemy.die() : this.handlePlayerHit();
         });
+    }
+    handleBossHit() {
+        if (!this.character.isHurt()) {
+            this.character.hit();
+            this.statusBar.setPercentage(this.character.energy);
+        }
+    }
+    handlePlayerHit() {
+        if (!this.character.isHurt()) {
+            this.character.hit();
+            this.statusBar.setPercentage(this.character.energy);
+        }
     }
 
     checkBottleCollisions() {
-        this.level.salsaBottles = this.level.salsaBottles.filter((bottle) => {
-            if (this.character.isColliding(bottle)) {
-                this.collectedBottles.push(bottle);
-                this.bottlBar.setPercentage(Math.min(100, this.bottlBar.percentage + 20));
-                SoundHub.play("bottleCollect");
-                return false;
-            }
-            return true;
+        this.level.salsaBottles = this.level.salsaBottles.filter(bottle => {
+            if (!this.character.isColliding(bottle)) return true;
+            this.collectBottle(bottle);
+            return false;
         });
     }
-
+    collectBottle(bottle) {
+        this.collectedBottles.push(bottle);
+        this.bottlBar.setPercentage(Math.min(100, this.bottlBar.percentage + 20));
+        SoundHub.play("bottleCollect");
+    }
     checkCoinCollisions() {
         this.level.coins = this.level.coins.filter((coin) => {
             if (this.character.isColliding(coin)) {
@@ -116,19 +109,19 @@ class World {
     }
 
     checkThrowableCollisions() {
-        this.throwableObjects.forEach((bottle) => {
-            this.level.enemies.forEach((enemy) => {
-                if (bottle.isColliding(enemy) && !enemy.isDead()) {
-                    if (enemy instanceof Endboss) {
-                        enemy.takeHit(20);
-                        this.endbossBar.setBossEnergy(enemy.energy);
-                    } else {
-                        enemy.die();
-                    }
-                    bottle.markedForDeletion = true;
-                }
+        this.throwableObjects.forEach(bottle => {
+            this.level.enemies.forEach(enemy => {
+                if (!bottle.isColliding(enemy) || enemy.isDead()) return;
+                this.handleBottleHit(enemy, bottle);
             });
         });
+    }
+    handleBottleHit(enemy, bottle) {
+        if (enemy instanceof Endboss) {
+            enemy.takeHit(20);
+            this.endbossBar.setBossEnergy(enemy.energy);
+        } else enemy.die();
+        bottle.markedForDeletion = true;
     }
     //#endregion
 
@@ -161,29 +154,38 @@ class World {
     //#region rendering
     draw() {
         if (!this.isRunning) return;
+        this.clearCanvas();
+        this.renderWorld();
+        this.renderUI();
+        this.update();
+        requestAnimationFrame(() => this.draw());
+    }
+
+    clearCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    renderWorld() {
         this.ctx.save();
         this.ctx.translate(this.camera_x, 0);
-        this.addObjectsToMap(this.level.backgroundObjects);
-        this.addObjectsToMap(this.level.clouds);
-        this.addObjectsToMap(this.throwableObjects);
-        this.addObjectsToMap(this.level.salsaBottles);
-        this.addObjectsToMap(this.level.coins);
-        this.addObjectsToMap(this.level.enemies);
+
+        const worldObjects = [
+            this.level.backgroundObjects,
+            this.level.clouds,
+            this.throwableObjects,
+            this.level.salsaBottles,
+            this.level.coins,
+            this.level.enemies
+        ];
+
+        worldObjects.forEach(obj => this.addObjectsToMap(obj));
         this.addToMap(this.character);
         this.ctx.restore();
+    }
 
-        // this.ctx.translate(-this.camera_x, 0); // back
-        this.addToMap(this.statusBar);
-        this.addToMap(this.bottlBar);
-        this.addToMap(this.coinBar);
-        this.addToMap(this.endbossBar)
-        // this.ctx.translate(this.camera_x, 0); // forward
-        this.update();
-        let self = this;
-        requestAnimationFrame(() => {
-            self.draw();
-        });
+    renderUI() {
+        [this.statusBar, this.bottlBar, this.coinBar, this.endbossBar]
+            .forEach(ui => this.addToMap(ui));
     }
     //#endregion
 
@@ -191,39 +193,29 @@ class World {
     update() {
         this.checkCollisions();
         this.checkThrowObjects();
-
         this.character.applyGravity();
         this.character.characterMovement();
         this.character.characterAnimation();
-        this.level.enemies.forEach(enemy => {
-            if (enemy.moveStep) enemy.moveStep(this.character);
-            if (enemy.animateStep) enemy.animateStep(this.character);
+        this.level.enemies.forEach(e => {
+            if (e.moveStep) e.moveStep(this.character);
+            if (e.animateStep) e.animateStep(this.character);
         });
         this.level.enemies = this.level.enemies.filter(e => !e.markedForDeletion);
-        this.throwableObjects = this.throwableObjects.filter(obj => !obj.markedForDeletion);
-
-        if (this.character.energy <= 0 && this.isRunning) {
-            this.gameOver();
-        }
+        this.throwableObjects = this.throwableObjects.filter(o => !o.markedForDeletion);
+        if (this.character.energy <= 0 && this.isRunning) this.gameOver();
         const endboss = this.level.enemies.find(e => e instanceof Endboss);
-        if (!endboss && this.isRunning) {
-            this.winGame();
-        }
+        if (!endboss && this.isRunning) this.winGame();
     }
     //#endregion
 
     //#region rendering helpers
     addObjectsToMap(objects) {
         objects.forEach(obj => {
-            if (obj instanceof ThrowableObject) {
-                obj.update();
-                obj.animate();
-            }
-            if (obj instanceof Coin) {
-                obj.animate();
+            if (obj instanceof ThrowableObject || obj instanceof Coin) {
+                obj.update?.(); obj.animate?.();
             }
             this.addToMap(obj);
-        })
+        });
     }
 
     addToMap(moObject) {

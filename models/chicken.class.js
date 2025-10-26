@@ -23,10 +23,8 @@ class Chicken extends MovableObject {
         this.loadImages(this.IMAGES_DEAD);
         this.x = 470 + Math.random() * 2500;
         this.speed = 0.2 + Math.random() * 0.25;
-
         this.animationCounter = 0;
         this.animationSpeed = 8;
-
         this.dead = false;
     }
 
@@ -38,7 +36,6 @@ class Chicken extends MovableObject {
     }
     animateStep = () => {
         this.animationCounter++;
-
         if (this.isDead()) {
             this.img = this.imageCache[this.IMAGES_DEAD[0]];
             if (this.animationCounter > 60) {

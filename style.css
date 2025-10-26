@@ -136,64 +136,41 @@ button:hover {
   margin-top: 1rem;
   background: #793D26;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 1.5rem;
   color: #E6B35A;
   width: 720px;
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
 }
 
 .keybindings,
 .game-rules {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  border-radius: 6px;
+  padding: 1rem;
 }
 
-.keybindings h3,
-.game-rules h3 {
-  font-size: 1.1rem;
-  margin-bottom: 0.5rem;
-  text-align: center;
+.keybindings {
+  background: #8B4B2F;
 }
 
 .keybindings ul,
 .game-rules ul {
-  display: flex;
   list-style: none;
-  font-size: 1rem;
-  line-height: 1.4;
-  justify-content: space-around;
-  width: 100%;
-  gap: 1rem;
 }
 
+@media (max-width: 768px) {
+  .control-hub {
+    flex-direction: column;
+  }
 
-.keybindings ul {
-  flex-direction: row;
+  .keybindings,
+  .game-rules {
+    width: 100%;
+  }
 }
 
-.game-rules ul {
-  flex-direction: column;
-  text-align: center;
-  gap: 0.3rem;
-}
-
-.keybindings li {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  text-align: center;
-}
-
-.keybindings li strong,
-.game-rules li strong {
-  color: #E6B35A;
-  font-size: 1.1rem;
-  margin-left: 0.5rem;
-}
 /* #endregion */
 
 /* #region legal-notice button  */

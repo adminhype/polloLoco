@@ -321,10 +321,10 @@ class SoundHub {
 
     static init() {
         this.sounds.background.loop = true;
-        this.sounds.background.volume = 0.1;
+        this.sounds.background.volume = 0.04;
 
         this.sounds.footstep.loop = true;
-        this.sounds.footstep.volume = 0.6;
+        this.sounds.footstep.volume = 0.4;
         this.sounds.jump.volume = 0.1;
         this.sounds.coin.volume = 0.1;
         this.sounds.bottle.volume = 0.1;
@@ -332,10 +332,10 @@ class SoundHub {
         this.sounds.death.volume = 0.1;
         this.sounds.gameover.volume = 1.0;
         this.sounds.win.volume = 1.0;
-        this.sounds.chickenDead.volume = 0.3;
-        this.sounds.chickenDead2.volume = 0.3;
-        this.sounds.bottleCollect.volume = 0.2;
-        this.sounds.snoring.volume = 0.2;
+        this.sounds.chickenDead.volume = 0.1;
+        this.sounds.chickenDead2.volume = 0.1;
+        this.sounds.bottleCollect.volume = 0.1;
+        this.sounds.snoring.volume = 0.1;
         this.loadSoundSetting();
     }
     static loadSoundSetting() {

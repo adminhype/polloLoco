@@ -34,7 +34,6 @@ class ChickenSmall extends MovableObject {
     }
     animateStep = () => {
         this.animationCounter++;
-
         if (this.isDead()) {
             this.img = this.imageCache[this.IMAGES_DEAD[0]];
             if (this.animationCounter > 60) {
